@@ -81,7 +81,7 @@ def parse_bam(args):
     data = {}
     coverage = []
 
-    for column in samfile.pileup():
+    for column in samfile.pileup(max_length=50000):
         position = {'a': 0,
                     'c': 0,
                     'g': 0,
