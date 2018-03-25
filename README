@@ -1,0 +1,1 @@
+Parses an indexed bam for SNPs in nanopore data. Accepts a map of snps.
