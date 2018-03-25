@@ -138,4 +138,4 @@ if __name__ == '__main__':
         snp_or_not(snps, args.dbsnp)
     else:
         for snp in snps:
-            print('\t'.join(snp))
+            print('\t'.join([str(i) for i in snp]))
