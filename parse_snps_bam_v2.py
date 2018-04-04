@@ -10,7 +10,7 @@ def parameters(snp_data):
     parse_data = snp_data[0]
 
     for snp, data in parse_data.items():
-        if int(data[7]) > int(allele2_freq):
+        if int(data[9]) > int(allele2_freq):
             if int(data[0]) > int(mean_coverage):
                 to_print.append([snp, data])
         else:
@@ -29,7 +29,9 @@ def snp_or_not(snp_data, map_file):
     # "G" count
     # "T" count
     # Reference base
+    # Allele Base
     # Allele freq
+    # Allele2 Base
     # Allele freq2
     # Piled reads
     with open(map_file, 'r') as g:
@@ -65,7 +67,9 @@ def parse_bam(args):
               'G',
               'T',
               'RefAllele',
+              'AlleleBase',
               'AlleleFreq',
+              'Alelle2Base',
               'AlleleFreq2',
               'ReadNum_samtools']
     if args.dbsnp:
@@ -99,10 +103,14 @@ def parse_bam(args):
 
         if reads_num:
             allele_freq = (sort[-1][1] * 100.0) / reads_num
+            allele_nuc = sort[-1][0]
             allele2_freq = (sort[-2][1] * 100.0) / reads_num
+            allele2_nuc = sort[-2][0]
         else:
             allele_freq = 0
+            allele_nuc = '-'
             allele2_freq = 0
+            allele2_nuc = '-'
 
         if sort[-1][0] != ref_seq[column.pos].lower() or int(allele2_freq) > 20:
             data[column.reference_pos + 1] = [reads_num,
@@ -111,7 +119,9 @@ def parse_bam(args):
                                               position['g'],
                                               position['t'],
                                               ref_seq[column.pos],
+                                              allele_nuc,
                                               round(allele_freq, 2),
+                                              allele2_nuc,
                                               round(allele2_freq, 2),
                                               column.n]
 
