@@ -1,20 +1,16 @@
 import argparse
 import pysam
-from numpy import mean
 
 
 def parameters(snp_data):
     to_print = []
-    allele2_freq = 40
-    mean_coverage = snp_data[1]
-    parse_data = snp_data[0]
-
-    for snp, data in parse_data.items():
+    allele2_freq = 15
+    for snp, data in snp_data.items():
         if int(data[9]) > int(allele2_freq):
-            if int(data[0]) > int(mean_coverage):
+            if int(data[0]) > 100:
                 to_print.append([snp, data])
         else:
-            if int(data[0]) > int(mean_coverage):
+            if int(data[0]) > 100:
                 to_print.append([snp, data])
 
     return to_print
@@ -83,7 +79,6 @@ def parse_bam(args):
 
     samfile = pysam.AlignmentFile(args.bam, 'rb')
     data = {}
-    coverage = []
 
     for column in samfile.pileup(max_length=50000):
         position = {'a': 0,
@@ -98,7 +93,6 @@ def parse_bam(args):
                 position[base.lower()] += 1
 
         reads_num = sum([i for _, i in position.items()])
-        coverage.append(reads_num)
         sort = sorted(position.items(), key=lambda x: x[1])
 
         if reads_num:
@@ -127,7 +121,7 @@ def parse_bam(args):
 
     samfile.close()
 
-    return (data, mean(coverage))
+    return data
 
 
 def args_parse():
